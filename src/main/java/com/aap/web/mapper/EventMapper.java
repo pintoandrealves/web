@@ -4,6 +4,11 @@ import com.aap.web.dto.EventDto;
 import com.aap.web.models.Event;
 
 public class EventMapper {
+
+    private EventMapper(){
+
+    }
+
     public static Event mapToEvent(EventDto eventDto){
         return Event.builder()
                 .id(eventDto.getId())

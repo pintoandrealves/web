@@ -1,9 +1,11 @@
 package com.aap.web.controller;
 
-import com.aap.web.dto.ClubDto;
 import com.aap.web.dto.EventDto;
 import com.aap.web.models.Event;
+import com.aap.web.models.UserEntity;
+import com.aap.web.security.SecurityUtil;
 import com.aap.web.service.EventService;
+import com.aap.web.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,11 +25,16 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+    @Autowired
+    private UserService userService;
+
+    private static final String EVENT_ATTRIBUTE = "event";
+
     @GetMapping("/events/{clubId}/new")
     public String createEventForm(@PathVariable("clubId") Long clubId, Model model){
         Event event = new Event();
         model.addAttribute("clubId", clubId);
-        model.addAttribute("event", event);
+        model.addAttribute(EVENT_ATTRIBUTE, event);
         return "events-create";
     }
 
@@ -37,7 +44,7 @@ public class EventController {
                               Model model,
                               BindingResult bindingResult) throws NotFoundException {
         if(bindingResult.hasErrors()){
-            model.addAttribute("event", eventDto);
+            model.addAttribute(EVENT_ATTRIBUTE, eventDto);
             return "events-create";
         }
         eventService.createEvent(clubId, eventDto);
@@ -46,7 +53,14 @@ public class EventController {
 
     @GetMapping("/events")
     public String eventList(Model model){
+        UserEntity user = new UserEntity();
         List<EventDto> events = eventService.findAllEvents();
+        String username = SecurityUtil.getSessionUser();
+        if(username != null) {
+            user = userService.findByUserName(username);
+            model.addAttribute("user", user);
+        }
+        model.addAttribute("user", user);
         model.addAttribute("events", events);
         return "events-list";
     }
@@ -55,14 +69,14 @@ public class EventController {
     public String eventDetail(@PathVariable("eventId") Long eventId,
                               Model model){
         EventDto eventDto = eventService.findByEventId(eventId);
-        model.addAttribute("event", eventDto);
+        model.addAttribute(EVENT_ATTRIBUTE, eventDto);
         return "events-detail";
     }
 
     @GetMapping("/events/{eventId}/edit")
-    public String editEventForm(@PathVariable("eventId") Long eventId, Model model) throws NotFoundException {
+    public String editEventForm(@PathVariable("eventId") Long eventId, Model model) {
         EventDto eventDto = eventService.findByEventId(eventId);
-        model.addAttribute("event", eventDto);
+        model.addAttribute(EVENT_ATTRIBUTE, eventDto);
         return "events-edit";
     }
 
@@ -72,7 +86,7 @@ public class EventController {
                               BindingResult bindingResult,
                               Model model){
         if(bindingResult.hasErrors()){
-            model.addAttribute("event", eventDto);
+            model.addAttribute(EVENT_ATTRIBUTE, eventDto);
             return "events-edit";
         }
         EventDto eventDb = eventService.findByEventId(eventId);
@@ -82,7 +96,6 @@ public class EventController {
         return "redirect:/events";
     }
 
-
     /*
      * HTML doesn't support DELETE or PUT methods, I'm using thymeleaf and html in this project
      */
@@ -91,6 +104,5 @@ public class EventController {
         eventService.deleteEvent(eventId);
         return "redirect:/events";
     }
-
 
 }

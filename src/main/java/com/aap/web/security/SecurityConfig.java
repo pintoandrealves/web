@@ -18,6 +18,8 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailService customUserDetailService;
 
+    private static final String LOGIN_URL = "/login";
+
     @Bean
     public static PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -27,13 +29,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login","/register","/clubs","/css/**","/js/**")
+                .antMatchers(LOGIN_URL,"/register","/clubs","/css/**","/js/**")
                 .permitAll()
                 .and()
                 .formLogin(form -> form
-                        .loginPage("/login")
+                        .loginPage(LOGIN_URL)
                         .defaultSuccessUrl("/clubs")
-                        .loginProcessingUrl("/login")
+                        .loginProcessingUrl(LOGIN_URL)
                         .failureUrl("/login?error=true")
                         .permitAll()
                 ).logout(

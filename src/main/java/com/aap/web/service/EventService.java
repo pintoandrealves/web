@@ -11,7 +11,7 @@ public interface EventService {
 
     List<EventDto> findAllEvents();
 
-    EventDto findByEventId(Long eventId);
+    EventDto findByEventId(Long eventId) throws NotFoundException;
 
     void updateEvent(EventDto eventDto);
 

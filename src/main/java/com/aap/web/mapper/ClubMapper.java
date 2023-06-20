@@ -5,6 +5,10 @@ import com.aap.web.models.Club;
 
 public class ClubMapper {
 
+    private ClubMapper() {
+
+    }
+
     public static Club mapToClub(ClubDto clubDto) {
         return Club.builder()
                 .id(clubDto.getId())
@@ -26,7 +30,7 @@ public class ClubMapper {
                 .createdOn(club.getCreatedOn())
                 .createdBy(club.getCreatedBy())
                 .updatedOn(club.getUpdatedOn())
-                .events(club.getEvents().stream().map((event) -> EventMapper.mapToEventDto(event)).toList())
+                .events(club.getEvents().stream().map(event -> EventMapper.mapToEventDto(event)).toList())
                 .build();
     }
 
