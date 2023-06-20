@@ -1,4 +1,4 @@
-package com.aap.web.service;
+package com.aap.web.service.impl;
 
 import com.aap.web.dto.EventDto;
 import com.aap.web.mapper.EventMapper;
@@ -6,6 +6,7 @@ import com.aap.web.models.Club;
 import com.aap.web.models.Event;
 import com.aap.web.repository.ClubRepository;
 import com.aap.web.repository.EventRepository;
+import com.aap.web.service.EventService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EventServiceImpl implements EventService{
+public class EventServiceImpl implements EventService {
 
     private EventRepository eventRepository;
     private ClubRepository clubRepository;

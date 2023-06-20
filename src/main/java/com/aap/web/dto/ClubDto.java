@@ -1,5 +1,6 @@
 package com.aap.web.dto;
 
+import com.aap.web.models.UserEntity;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,6 +19,7 @@ public class ClubDto {
     private String photoUrl;
     @NotEmpty(message = "Content should not be empty")
     private String content;
+    private UserEntity createdBy;
     @CreationTimestamp
     private LocalDateTime createdOn;
     @CreationTimestamp
