@@ -58,7 +58,6 @@ public class EventController {
         String username = SecurityUtil.getSessionUser();
         if(username != null) {
             user = userService.findByUserName(username);
-            model.addAttribute("user", user);
         }
         model.addAttribute("user", user);
         model.addAttribute("events", events);
@@ -67,14 +66,21 @@ public class EventController {
 
     @GetMapping("/events/{eventId}")
     public String eventDetail(@PathVariable("eventId") Long eventId,
-                              Model model){
+                              Model model) throws NotFoundException {
+        UserEntity user = new UserEntity();
         EventDto eventDto = eventService.findByEventId(eventId);
+        String username = SecurityUtil.getSessionUser();
+        if(username != null) {
+            user = userService.findByUserName(username);
+        }
+        model.addAttribute("club", eventDto);
+        model.addAttribute("user", user);
         model.addAttribute(EVENT_ATTRIBUTE, eventDto);
         return "events-detail";
     }
 
     @GetMapping("/events/{eventId}/edit")
-    public String editEventForm(@PathVariable("eventId") Long eventId, Model model) {
+    public String editEventForm(@PathVariable("eventId") Long eventId, Model model) throws NotFoundException {
         EventDto eventDto = eventService.findByEventId(eventId);
         model.addAttribute(EVENT_ATTRIBUTE, eventDto);
         return "events-edit";
@@ -84,7 +90,7 @@ public class EventController {
     public String updateEvent(@PathVariable("eventId") Long eventId,
                               @Valid @ModelAttribute("event") EventDto eventDto,
                               BindingResult bindingResult,
-                              Model model){
+                              Model model) throws NotFoundException {
         if(bindingResult.hasErrors()){
             model.addAttribute(EVENT_ATTRIBUTE, eventDto);
             return "events-edit";

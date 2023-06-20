@@ -34,7 +34,6 @@ public class ClubController {
         String username = SecurityUtil.getSessionUser();
         if(username != null) {
             user = userService.findByUserName(username);
-            model.addAttribute("user", user);
         }
         model.addAttribute("user", user);
         model.addAttribute("clubs", clubs);
@@ -89,7 +88,6 @@ public class ClubController {
         String username = SecurityUtil.getSessionUser();
         if(username != null) {
             user = userService.findByUserName(username);
-            model.addAttribute("user", user);
         }
         model.addAttribute("user", user);
         model.addAttribute("club", clubDto);
